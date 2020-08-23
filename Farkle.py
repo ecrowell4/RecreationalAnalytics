@@ -8,7 +8,18 @@ class FarkleRoll(object):
         self.n_dice = 6
         self.taken = 0
         self.roll = Counter()
-        
+        # Counters for each combo
+        self.six_of_kind = 0
+        self.two_triplets = 0
+        self.five_of_kind = 0
+        self.straight_flush = 0
+        self.three_pairs = 0
+        self.four_of_kind_paired = 0
+        self.four_of_kind = 0
+        self.three_of_kind = 0
+        self.single_hundred = 0
+        self.single_fifty = 0
+
     def play(self):
         rolling = True
         i=0
@@ -67,6 +78,7 @@ class FarkleRoll(object):
             self.score += 3000
             self.roll.clear()
             self.taken += 6
+            self.six_of_kind += 1
     
     def is_two_triplets(self):
         """Checks if there's two triplets in roll. If so,
@@ -75,6 +87,7 @@ class FarkleRoll(object):
             self.score += 2500
             self.roll.clear()
             self.taken += 6
+            self.two_triplets += 1
             
     def is_five_of_kind(self):
         """Checks if there's five of a kind in roll. If so,
@@ -91,6 +104,7 @@ class FarkleRoll(object):
             self.score += 1500
             self.roll.clear()
             self.taken += 6
+            self.straight_flush += 1
             
     def is_three_pairs(self):
         """Checks if there's three pairs. If so, increment
@@ -108,10 +122,12 @@ class FarkleRoll(object):
                 self.score += 1500
                 self.roll.clear()
                 self.taken += 6
+                self.four_of_kind_paired += 1
             else:
                 self.score += 1000
                 _ = self.roll.pop(self.roll.most_common(1)[0][0])
                 self.taken += 4
+                self.four_of_kind += 1
     
     def is_three_of_kind(self):
         """Checks if there's a three of kind. If so, increment
@@ -121,6 +137,7 @@ class FarkleRoll(object):
             _ = self.roll.pop(dice_val)
             self.score += 100*dice_val
             self.taken += 3
+            self.three_of_kind += 1
         
     def is_100(self):
         """Checks if there's any 100's in the roll. Take all of them.
@@ -130,6 +147,7 @@ class FarkleRoll(object):
             self.score += to_take*100
             self.roll[1] -= to_take
             self.taken += to_take
+            self.single_hundred += to_take
     
     def is_50(self):
         """Checks if there's any 50's in the roll. Only take one."""
@@ -138,6 +156,7 @@ class FarkleRoll(object):
                 # Take all the fives if it means using up dice
                 self.score += 50*self.roll[5]
                 self.taken += self.roll[5]
+                self.single_fifty += self.roll[5]
                 _ = self.roll.pop(5)
                 
             elif self.taken==0:
@@ -145,3 +164,4 @@ class FarkleRoll(object):
                 self.score += 50
                 self.roll[5] -= 1
                 self.taken += 1
+                self.single_fifty += 1
