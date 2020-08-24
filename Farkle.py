@@ -33,7 +33,7 @@ class FarkleRoll(object):
             #i+=1
             if self.taken==0:
                 rolling=False
-                return self.score
+                return [self.score] + list(self.__dict__.values())[4:]
             elif self.taken==self.n_dice:
                 self.n_dice = 6
             elif self.taken >= 0:
@@ -96,6 +96,7 @@ class FarkleRoll(object):
             self.score += 2000
             _ = self.roll.pop(self.roll.most_common(1)[0][0])
             self.taken += 5
+            self.five_of_kind += 1
             
     def is_straight_flush(self):
         """Checks if there's 1-6 straight. If so,
@@ -109,10 +110,11 @@ class FarkleRoll(object):
     def is_three_pairs(self):
         """Checks if there's three pairs. If so, increment
         score by 1500 and remove all dice from table."""
-        if (len(self.roll.items())==3)&(list(self.roll.values())==[2,2]):
+        if (len(self.roll.items())==3)&(list(self.roll.values())==[2,2,2]):
             self.score += 1500
             self.roll.clear()
             self.taken += 6
+            self.three_pairs += 1
             
     def is_four_of_kind(self):
         """Checks if there's four of a kind and if remaining
